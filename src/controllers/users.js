@@ -1,10 +1,7 @@
 const handler = require("./../handlers/users");
 const express = require('express');
 const app = express();
-//const key = require("../utils/key");
-//const sendWelcomEmail = require("../utils/welcomEmail");
-//app.set("key", key.key);
-//const createToken = require("../utils/createToken");
+const createToken = require("../utils/jwt");
 
 const wasUpdated = (result, req, res) => {
   result[0] === 1
@@ -51,7 +48,8 @@ const createUser = async (req, res, next) => {
     const user = req.body;
     const result = await handler.createUser(user);
     if (result) {
-      res.json(result);
+      const token = await createToken(result);
+      res.json(token);
     } else {
       res.status(500).json("Error creating token");
     }
